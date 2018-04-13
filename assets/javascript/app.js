@@ -22,8 +22,34 @@ var map, infoWindow;
             center: {lat: 37.8712, lng: -122.2727},
             zoom: 10
         });
+        console.log("is the map there?");
+/*         var uluru = {lat: -25.363, lng: 131.044};
+        var marker = new google.maps.Marker({
+            position: uluru,
+            map: map
+        }); */
         
         infoWindow = new google.maps.InfoWindow;
+
+        google.maps.event.addListener(map, "click", function (e) {
+            var latLng = e.latLng;
+            // make new marker?
+            var clickMarker = new google.maps.Marker({
+                position: {lat: latLng.lat(), lng:latLng.lng()},
+                map: map,
+                
+            });
+            map.panTo(clickMarker.getPosition());
+            console.log("did it move?");
+
+
+            console.log(clickMarker);
+            //lat and lng is available in e object
+            
+            console.log(latLng.lat());
+        
+        });
+        
 
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function(position) {
@@ -45,6 +71,8 @@ var map, infoWindow;
             // Browser doesn't support Geolocation
             handleLocationError(false, infoWindow, map.getCenter());
         }
+        
+       
     }
 
     function handleLocationError(browserHasGeolocation, infoWindow, pos) {
@@ -55,18 +83,3 @@ var map, infoWindow;
         infoWindow.open(map);
     }
 
-    // function initMap() {
-    //     // pick  location and center on it
-    //     var uluru = {lat: -25.363, lng: 131.044};
-    //     var map = new google.maps.Map(document.getElementById('map'), {
-    //         zoom: 4,
-    //         center: uluru
-    //     });
-
-    //     // adds the marker
-    //     var marker = new google.maps.Marker({
-    //         position: uluru,
-    //         map: map
-    //     });
-    // }
-// <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBBleYeUjhP-WqjPaL6L1jLUrXJuScpqW8&callback=initMap"></script>
