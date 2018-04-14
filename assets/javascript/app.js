@@ -64,7 +64,9 @@ $(document).ready(function () {
         marker.addListener("click", togglePanel);
 
         google.maps.event.addListener(map, "click", function (e) {
+
             var latLng = e.latLng;
+
             // make new marker?
             var clickMarker = new google.maps.Marker({
                 position: {lat: latLng.lat(), lng:latLng.lng()},
@@ -74,9 +76,11 @@ $(document).ready(function () {
             map.panTo(clickMarker.getPosition());
             console.log("did it move?");
 
-
             console.log("clickMarker", clickMarker);
             //lat and lng is available in e object
+
+            // permit side panel functionality on new pinpoints
+            clickMarker.addListener("click", togglePanel);
             
             console.log(latLng.lat());
 
