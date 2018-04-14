@@ -5,12 +5,15 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="assets/images/favicon.png" sizes="32x32">
     <title>Memory Map</title>
 
     <!-- CDNS -->
+    <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl"
+        crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
 
 </head>
@@ -53,24 +56,49 @@
         <div class="row">
             <div class="col-lg-12">
 
-                 <!-- google embed goes in here-->
-                <div id="map"></div>
+                <div class="map-placeholder">
+
+                    <div id="map"></div>
+
+                    <ul id="toggle-panel">
+                        <li id="display-mode">
+                            <i class="fas fa-eye"></i>
+                        </li>
+                        <li id="edit-mode">
+                            <i class="fas fa-pencil-alt"></i>
+                        </li>
+                    </ul>
+
+                    <div id="pinpoint-placeholder"></div>
+                    <div class="blurb-bubble b-close">
+                        <p>Touch water with paw then recoil in horror mewl for food at 4am. This cat happen now, it was too
+                            purr-fect!!!</p>
+                    </div>
+
+                    <div class="panel panel-primary menu-close" id="side-panel">
+                        <div class="close-button">
+                            <i class="fas fa-times"></i>
+                        </div>
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Memory #2456</h3>
+                        </div>
+                        <div class="panel-body">
+                            <h4>Blurb</h4>
+                            <p class="blurb">
+                                Touch water with paw then recoil in horror mewl for food at 4am. This cat happen now, it was too purr-fect!!! meow go back to sleep owner brings food and water tries to pet on head, so scratch get sprayed by water because bad cat, for lick face hiss at owner, pee a lot, and meow repeatedly scratch at fence purrrrrr eat muffins and poutine until owner comes back.
+                            </p>
+
+                            <h4>Extra info</h4>
+                            <p>Location</p>
+                            <p>Date</p>
+
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
         </div>
-
-
-    <!-- Firebase -->
-
-    <button id="edit-button"> Click me to edit or add a comment </button>
-    <div class="form-group">
-        <label for="name-input">Comment</label>
-        <input id="comment-input" type="text">
-      </div>
-
-
-
-
-
 
         <div class="row">
             <div class="col-lg-12">
@@ -79,20 +107,30 @@
         </div>
 
         <div class="row">
-            <div class="col-lg-4">Snazzy blurb goes here</div>
-            <div class="col-lg-4">Snazzy blurb goes here</div>
-            <div class="col-lg-4">Snazzy blurb goes here</div>
+            <div class="col-lg-4">
+                <div class="well">
+                    <p>Touch water with paw then recoil in horror mewl for food at 4am. This cat happen now, it was too purr-fect!!! meow go back to sleep owner brings food and water tries to pet on head, so scratch get sprayed by water because bad cat, for lick face hiss at owner, pee a lot, and meow repeatedly scratch at fence purrrrrr eat muffins and poutine until owner comes back.</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="well">
+                    <p>Touch water with paw then recoil in horror mewl for food at 4am. This cat happen now, it was too purr-fect!!! meow go back to sleep owner brings food and water tries to pet on head, so scratch get sprayed by water because bad cat, for lick face hiss at owner, pee a lot, and meow repeatedly scratch at fence purrrrrr eat muffins and poutine until owner comes back.</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="well">
+                    <p>Touch water with paw then recoil in horror mewl for food at 4am. This cat happen now, it was too purr-fect!!! meow go back to sleep owner brings food and water tries to pet on head, so scratch get sprayed by water because bad cat, for lick face hiss at owner, pee a lot, and meow repeatedly scratch at fence purrrrrr eat muffins and poutine until owner comes back.</p>
+                </div>
+            </div>
         </div>
 
     </div>
     <!-- WRAPPER ENDS -->
     <!-- ////////////// -->
 
-    <!-- Javascript -->
-   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBBleYeUjhP-WqjPaL6L1jLUrXJuScpqW8&callback=initMap"></script>
-   <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
-   <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
-   <script type="text/javascript" src="assets/javascript/app.js"></script>
+    <!-- javascript -->
+    <script src="assets/javascript/app.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBBleYeUjhP-WqjPaL6L1jLUrXJuScpqW8&callback=initMap"></script>
 
 </body>
 
