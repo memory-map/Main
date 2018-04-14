@@ -34,11 +34,11 @@ $(document).ready(function () {
     initMap = function () {
 
         var defaultLoc = { lat: 37.8712, lng: -122.2727 };
-
+        
         // declaring map object
-        map = new google.maps.Map(document.getElementById('map'), {
+        var map = new google.maps.Map(document.getElementById('map'), {
             center: defaultLoc,
-            zoom: 15,
+            zoom: 13,
             fullscreenControl: false,
             streetViewControl: false,
             mapTypeControl: false,
@@ -52,7 +52,38 @@ $(document).ready(function () {
                     stylers: [{ visibility: "off" }]
                 }
             ]
+        });
 
+        var input = document.getElementById('pac-input');
+        var autocomplete = new google.maps.places.Autocomplete(input);
+        
+        autocomplete.bindTo('bounds', map);
+
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+        var infowindow = new google.maps.InfoWindow();
+        var infowindowContent = document.getElementById('infowindow-content');
+        infowindow.setContent(infowindowContent);
+        var marker = new google.maps.Marker({
+            map: map
+        });
+        marker.addListener('click', function() {
+            infowindow.open(map, marker);
+        });
+
+        autocomplete.addListener('place_changed', function() {
+            infowindow.close();
+            var place = autocomplete.getPlace();
+            if (!place.geometry) {
+                return;
+            }
+
+            if (place.geometry.viewport) {
+                map.fitBounds(place.geometry.viewport);
+            } else {
+                map.setCenter(place.geometry.location);
+                map.setZoom(17);
+            }
         });
 
         var marker = new google.maps.Marker({
@@ -64,9 +95,7 @@ $(document).ready(function () {
         marker.addListener("click", togglePanel);
 
         google.maps.event.addListener(map, "click", function (e) {
-
             var latLng = e.latLng;
-
             // make new marker?
             var clickMarker = new google.maps.Marker({
                 position: {lat: latLng.lat(), lng:latLng.lng()},
@@ -76,21 +105,10 @@ $(document).ready(function () {
             map.panTo(clickMarker.getPosition());
             console.log("did it move?");
 
-            console.log("clickMarker", clickMarker);
+            console.log(clickMarker);
             //lat and lng is available in e object
-
-            // permit side panel functionality on new pinpoints
-            clickMarker.addListener("click", togglePanel);
             
             console.log(latLng.lat());
-
-            var newPosition = {
-                lat: latLng.lat(),
-                lng: latLng.lng()
-            }
-            database.ref().push(newPosition);
-
-           
         
         });
 
@@ -155,15 +173,7 @@ $(document).ready(function () {
             time: currentTime
         };
         database.ref().push(newComment);
-
     });
-
-
-
-            
-   
-    
-   
 
     // =======================================
     // ===== OUR UI CLICK EVENTS GO HERE =====
