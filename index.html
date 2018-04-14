@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl"
         crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
 
 </head>
@@ -61,19 +60,17 @@
                 <div class="form-group">
                     <label for="name-input">Comment</label>
                     <input id="comment-input" type="text">
-                    <label for="name-input">Blurb</label>
-                    <input id="blurb-input" type="text">
-                </div>
-                <div class="form-group">
-                    <label for="name-input">Location</label>
-                    <input id="location-input" type="text">
-                    <label for="name-input">Date</label>
-                    <input id="date-input" type="text">
                 </div>
 
                 <div class="map-placeholder">
-
+                    <input id="pac-input" class="controls" type="text"
+                        placeholder="Enter a location">
                     <div id="map"></div>
+                    <div id="infowindow-content">
+                        <span id="place-name"  class="title"></span><br>
+                        Place ID <span id="place-id"></span><br>
+                        <span id="place-address"></span>
+                    </div>
 
                     <ul id="toggle-panel">
                         <li id="display-mode">
@@ -158,7 +155,7 @@
 
     <!-- javascript -->
     <script src="assets/javascript/app.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBBleYeUjhP-WqjPaL6L1jLUrXJuScpqW8&callback=initMap"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBBleYeUjhP-WqjPaL6L1jLUrXJuScpqW8&libraries=places&callback=initMap"></script>
 
 </body>
 
