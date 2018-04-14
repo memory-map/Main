@@ -63,6 +63,25 @@ $(document).ready(function () {
 
         marker.addListener("click", togglePanel);
 
+        google.maps.event.addListener(map, "click", function (e) {
+            var latLng = e.latLng;
+            // make new marker?
+            var clickMarker = new google.maps.Marker({
+                position: {lat: latLng.lat(), lng:latLng.lng()},
+                map: map,
+                
+            });
+            map.panTo(clickMarker.getPosition());
+            console.log("did it move?");
+
+
+            console.log(clickMarker);
+            //lat and lng is available in e object
+            
+            console.log(latLng.lat());
+        
+        });
+
     }
 
     function togglePanel() {
