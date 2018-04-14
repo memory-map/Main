@@ -75,10 +75,18 @@ $(document).ready(function () {
             console.log("did it move?");
 
 
-            console.log(clickMarker);
+            console.log("clickMarker", clickMarker);
             //lat and lng is available in e object
             
             console.log(latLng.lat());
+
+            var newPosition = {
+                lat: latLng.lat(),
+                lng: latLng.lng()
+            }
+            database.ref().push(newPosition);
+
+           
         
         });
 
@@ -128,7 +136,16 @@ $(document).ready(function () {
             time: currentTime
         };
         database.ref().push(newComment);
+
     });
+
+    var newPosition = {
+
+    }
+            
+   
+    
+   
 
     // =======================================
     // ===== OUR UI CLICK EVENTS GO HERE =====
