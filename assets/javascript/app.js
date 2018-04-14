@@ -107,8 +107,24 @@ $(document).ready(function () {
 
             console.log(clickMarker);
             //lat and lng is available in e object
+
+            // permit side panel functionality on new pinpoints
+            clickMarker.addListener("click", togglePanel);
             
             console.log(latLng.lat());
+
+            var contentString = "<div class='clickme'>" + "Hi! There!" + "</div>";
+
+            var infowindow = new google.maps.InfoWindow({
+                content: contentString
+            });
+
+            clickMarker.addListener('click', function () {
+                infowindow.open(map, clickMarker);
+            });
+
+            $("#side-panel").removeClass("menu-open");
+            $("#side-panel").addClass("menu-close");
         
         });
 
@@ -139,7 +155,7 @@ $(document).ready(function () {
 
     // this shit fucks up easily so instead write it so that
     // one click on pinpoint displays blurb, second click on pinpoint removes blurb and shows side-panel. capisce
-    $(".blurb-bubble").on("click", function () {
+    $(document.body).on("click", ".clickme", function () {
 
         console.log("Blurb clicked!");
         $("#side-panel").removeClass("menu-close");

@@ -105,6 +105,7 @@ ul#toggle-panel {
 }
 
 .blurb-bubble {
+    display: none;
     position: absolute;
     top: 20%;
     left: 50%;
