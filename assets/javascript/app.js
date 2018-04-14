@@ -155,20 +155,46 @@ $(document).ready(function () {
 
             bubbleClose = true;
 
-            $("#side-panel").removeClass("menu-open");
-            $("#side-panel").addClass("menu-close");
+            
 
+            /* if ($("#display-mode").hasClass("active")) {
+
+                console.log("Display mode has class active!");
+                $("#side-panel").removeClass("menu-close").addClass("menu-open");
+    
+            } else if ($("#edit-mode").hasClass("active")) {
+                console.log("Edit mode has class active!");
+                // open side edit when edit mode is active
+                $("#side-edit").removeClass("menu-close").addClass("menu-open");
+            }
+ */
         }
 
     }
 
     // this shit fucks up easily so instead write it so that
     // one click on pinpoint displays blurb, second click on pinpoint removes blurb and shows side-panel. capisce
-    $(document.body).on("click", ".clickme", function () {
+    /* $(document.body).on("click", ".clickme", function () {
 
         console.log("Blurb clicked!");
         $("#side-panel").removeClass("menu-close");
         $("#side-panel").addClass("menu-open");
+
+    }); */
+
+    $(".blurb-bubble").on("click", function () {
+
+        console.log("Blurb clicked!");
+        if ($("#display-mode").hasClass("active")) {
+
+            console.log("Display mode has class active!");
+            $("#side-panel").removeClass("menu-close").addClass("menu-open");
+
+        } else if ($("#edit-mode").hasClass("active")) {
+            console.log("Edit mode has class active!");
+            // open side edit when edit mode is active
+            $(".side-edit").removeClass("menu-close").addClass("menu-open");
+        }
 
     });
 
@@ -242,11 +268,7 @@ $(document).ready(function () {
         $("#edit-mode").removeClass("active");
         $(this).addClass("active");
 
-        if ($("#display-mode").hasClass("active")) {
-
-            console.log("Display mode has class active!");
-
-        }
+        
 
     });
 
@@ -257,13 +279,16 @@ $(document).ready(function () {
         $("#display-mode").removeClass("active");
         $(this).addClass("active");
 
-        if ($("#edit-mode").hasClass("active")) {
-
-            console.log("Edit mode has class active!");
-
-        }
+        
 
     });
+
+
+    $(".close-button").on("click", function () {
+        $("#side-panel").removeClass("menu-open").addClass("menu-close");
+        $(".side-edit").removeClass("menu-open").addClass("menu-close");
+        console.log("sidebar closed");
+    })
 
     // document ready closing tag
 });
