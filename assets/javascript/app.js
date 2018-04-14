@@ -127,10 +127,13 @@ $(document).ready(function () {
 
 
     // jessica's code
+    var content; var currentTime = moment(currentTime).format("hh:mm a");
     $("#edit-button").on("click", function (event) {
         content = $("#comment-input").val().trim();
+        
         console.log("content: ", content);
         console.log("time: ", currentTime);
+       
         var newComment = {
             content: content,
             time: currentTime
@@ -139,9 +142,8 @@ $(document).ready(function () {
 
     });
 
-    var newPosition = {
 
-    }
+
             
    
     
