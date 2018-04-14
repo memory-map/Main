@@ -102,6 +102,15 @@ $(document).ready(function () {
                 map: map,
                 
             });
+
+            var newLatitude = {
+                lat: latLng.lat(), 
+                lng: latLng.lng(),
+            }
+
+            database.ref().push(newLatitude);
+
+
             map.panTo(clickMarker.getPosition());
             console.log("did it move?");
 
