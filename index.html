@@ -1,202 +1,190 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en-us">
 
 <head>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/png" href="assets/images/favicon.png" sizes="32x32">
     <title>Memory Map</title>
+    <link rel="icon" type="image/png" href="assets/images/pinpoint_rnd.png" sizes="32x32">
 
-    <!-- CDNS -->
+    <!-- /// OTHER CDNs /// -->
     <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl"
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.0/moment.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js" integrity="sha384-slN8GvtUJGnv6ca26v8EzVaR9DC58QEwsIk9q1QXdCU8Yu8ck/tL/5szYlBbqmS+"
         crossorigin="anonymous"></script>
+
+    <!-- /// STYLESHEETS /// -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
-    <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
 
 </head>
 
 <body>
+    <div class="all-wrap">
 
-    <!-- /////////////////// -->
-    <!-- NAV BAR. DON'T EDIT -->
-    <nav class="navbar navbar-default">
-        <div class="container">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
-                    aria-expanded="false">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="index.html">Memory Map</a>
-            </div>
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-1" aria-expanded="false" style="height: 1px;">
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a href="index.html">About</a>
-                    </li>
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
-        </div>
-    </nav>
-    <!-- NAV BAR. DON'T EDIT -->
-    <!-- /////////////////// -->
-
-    <!-- ////////////// -->
-    <!-- WRAPPER BEGINS -->
-    <div class="container">
-
-        <div class="row">
-            <div class="col-lg-12">
-
-                <button id="edit-button"> Click me to edit or add a comment </button>
-                <div class="form-group">
-                    <label for="name-input">Comment</label>
-                    <input id="comment-input" type="text">
-                    <label for="name-input">Blurb</label>
-                    <input id="blurb-input" type="text">
+        <!-- /// NAVIGATION /// -->
+        <nav>
+            <div class="logo">Memory Map</div>
+            <ul class="menu">
+                <div class="menu-item toggle">
+                    <span></span>
                 </div>
-                <div class="form-group">
-                    <label for="name-input">Location</label>
-                    <input id="location-input" type="text">
-                    <label for="name-input">Date</label>
-                    <input id="date-input" type="text">
-                </div>
+                <li class="menu-item">
+                    <a href="#">
+                        <i class="fa fa-book"></i> How-To-Use</a>
+                </li>
+                <li class="menu-item">
+                    <a href="#">
+                        <i class="fab fa-github"></i> View On Github</a>
+                </li>
+            </ul>
+        </nav>
 
-                <div class="map-placeholder">
-                    <input id="pac-input" class="controls" type="text"
-                        placeholder="Enter a location">
-                    <div id="map"></div>
-                    <div id="infowindow-content">
-                        <span id="place-name"  class="title"></span><br>
-                        Place ID <span id="place-id"></span><br>
-                        <span id="place-address"></span>
-                    </div>
-
-                    <ul id="toggle-panel">
-                        <li id="display-mode">
-                            <i class="fas fa-eye"></i>
-                        </li>
-                        <li id="edit-mode">
-                            <i class="fas fa-pencil-alt"></i>
-                        </li>
-                    </ul>
-
-                    <div id="pinpoint-placeholder"></div>
-                    <div class="blurb-bubble b-close">
-                        <p>Touch water with paw then recoil in horror mewl for food at 4am. This cat happen now, it was too
-                            purr-fect!!!
-                        </p>
-                    </div>
-
-                    <div class="panel panel-primary menu-close" id="side-panel">
-                        <div class="close-button">
-                            <i class="fas fa-times"></i>
-                        </div>
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Memory #2456</h3>
-                        </div>
-                        <div class="panel-body">
-                            <h4>Blurb</h4>
-                            <p class="blurb">
-                                Touch water with paw then recoil in horror mewl for food at 4am. This cat happen now, it was too purr-fect!!! meow go back
-                                to sleep owner brings food and water tries to pet on head, so scratch get sprayed by water
-                                because bad cat, for lick face hiss at owner, pee a lot, and meow repeatedly scratch at fence
-                                purrrrrr eat muffins and poutine until owner comes back.
-                            </p>
-
-                            <h4>Extra info</h4>
-                            <p>Location</p>
-                            <p>Date</p>
-
-                        </div>
-                    </div>
-
-                    <div class="panel panel-primary menu-close side-edit" id="side-panel">
-                        <div class="close-button">
-                            <i class="fas fa-times"></i>
-                        </div>
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Edit Memory</h3>
-                        </div>
-                        <div class="panel-body">
-                            <form>
-                                <div class="form-group">
-                                  <label for="employee-name-input">Employee Name</label>
-                                  <input class="form-control" id="employee-name-input" type="text">
-                                </div>
-                                <div class="form-group">
-                                  <label for="role-input">Role</label>
-                                  <input class="form-control" id="role-input" type="text">
-                                </div>
-                                <div class="form-group">
-                                  <label for="start-input">Start Date (DD/MM/YY - ex: 01/01/89)</label>
-                                  <input class="form-control" id="start-input" type="text">
-                                </div>
-                                <div class="form-group">
-                                  <label for="rate-input">Monthly Rate</label>
-                                  <input class="form-control" id="rate-input" type="text">
-                                </div>
-                                <button class="btn btn-primary" id="add-employee-btn" type="submit">Submit</button>
-                              </form>
-
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
+        <!-- /// HEADER /// -->
+        <div class="jumbotron masthead text-center">
+            <h1 class="text-center">Memory Map</h1>
+            <h3 class="text-center">Create a visual journey of your memories</h3>
+            <a class="btn-more">Learn More</a>
         </div>
 
-        <div class="row">
-            <div class="col-lg-12">
-                <h1>About the App</h1>
-            </div>
-        </div>
+        <!-- /// WRAPPER /// -->
+        <div class="container main">
 
-        <div class="row">
-            <div class="col-lg-4">
-                <div class="well">
-                    <p>Touch water with paw then recoil in horror mewl for food at 4am. This cat happen now, it was too purr-fect!!!
-                        meow go back to sleep owner brings food and water tries to pet on head, so scratch get sprayed by
-                        water because bad cat, for lick face hiss at owner, pee a lot, and meow repeatedly scratch at fence
-                        purrrrrr eat muffins and poutine until owner comes back.</p>
+            <div class="wrapper map-container">
+                <div class="row">
+                    <div class="col-lg-12">
+
+                        <!-- /// MAP HTML GOES IN DIV BELOW /// -->
+                        <div class="map-placeholder">
+
+                            <!-- /// MODES /// -->
+                            <ul id="toggle-panel">
+                                <li id="display-mode">
+                                    <i class="fas fa-eye"></i>
+                                </li>
+                                <li id="edit-mode">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </li>
+                            </ul>
+
+                            <!-- /// INFO PANEL /// -->
+                            <div class="panel panel-primary smenu-close" id="side-panel">
+                                <div class="close-button">
+                                    <i class="fas fa-times"></i>
+                                </div>
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Memory #2456</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <h4>Blurb</h4>
+                                    <p class="blurb">
+                                        Touch water with paw then recoil in horror mewl for food at 4am. This cat happen now, it was too purr-fect!!! meow go back to sleep owner brings food and water tries to pet on head, so scratch get sprayed by water because bad cat, for lick face hiss at owner, pee a lot, and meow repeatedly scratch at fence purrrrrr eat muffins and poutine until owner comes back.
+                                    </p>
+                                    <div class="bottom-info text-right">
+                                        <p>Location</p>
+                                        <p>Date</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- /// EDIT PANEL /// -->
+                            <div class="panel panel-primary smenu-close" id="side-edit">
+                                <div class="close-button">
+                                    <i class="fas fa-times"></i>
+                                </div>
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Edit Memory</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <form>
+                                        <div class="form-group">
+                                            <label for="">Employee Name</label>
+                                            <input class="form-control" id="" type="text">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Role</label>
+                                            <input class="form-control" id="" type="text">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Start Date (DD/MM/YY - ex: 01/01/89)</label>
+                                            <input class="form-control" id="" type="text">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Monthly Rate</label>
+                                            <input class="form-control" id="" type="text">
+                                        </div>
+                                        <button class="btn btn-primary" id="" type="submit">Submit</button>
+                                    </form>
+
+                                </div>
+                            </div>
+
+                            <!-- /// SEARCH BAR /// -->
+                            <input id="pac-input" class="map-controls" type="text" placeholder="Enter a location">
+
+                            <!-- /// OUR GOOGLE MAP /// -->
+                            <div id="map"></div>
+
+                        </div>
+
+                    </div>
                 </div>
             </div>
-            <div class="col-lg-4">
-                <div class="well">
-                    <p>Touch water with paw then recoil in horror mewl for food at 4am. This cat happen now, it was too purr-fect!!!
-                        meow go back to sleep owner brings food and water tries to pet on head, so scratch get sprayed by
-                        water because bad cat, for lick face hiss at owner, pee a lot, and meow repeatedly scratch at fence
-                        purrrrrr eat muffins and poutine until owner comes back.</p>
+
+            <div class="wrapper how-container" id="how-section">
+                <div class="row">
+                    <div class="col-lg-12">
+
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title text-center">
+                                    Instructions
+                                </h3>
+                            </div>
+                            <div class="panel-body">
+
+                                <!-- ///  INSTRUCTIONS GO HERE /// -->
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <p>
+                                            There are two modes to this application, <strong>Display Mode</strong> (represented by an eye icon) and <strong>Edit Mode</strong> (represented by a pencil icon). The former allows you to view your memories on the map. The latter allows you to edit and add new pinpoints to the map.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="instr-icon">
+                                            <i class="fas fa-eye"></i>
+                                        </div>
+                                        <h3 class="text-center">Display Mode</h3>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="instr-icon">
+                                            <i class="fas fa-pencil-alt"></i>
+
+                                        </div>
+                                        <h3 class="text-center">Edit Mode</h3>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-lg-4">
-                <div class="well">
-                    <p>Touch water with paw then recoil in horror mewl for food at 4am. This cat happen now, it was too purr-fect!!!
-                        meow go back to sleep owner brings food and water tries to pet on head, so scratch get sprayed by
-                        water because bad cat, for lick face hiss at owner, pee a lot, and meow repeatedly scratch at fence
-                        purrrrrr eat muffins and poutine until owner comes back.</p>
-                </div>
-            </div>
+
         </div>
+        <!-- /// END WRAPPER /// -->
+
+        <!-- /// OUR JAVASCRIPT /// -->
+        <script src="assets/javascript/app.js"></script>
+
+        <!-- /// GOOGLE MAPS API /// -->
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBBleYeUjhP-WqjPaL6L1jLUrXJuScpqW8&libraries=places&callback=initMap"></script>
 
     </div>
-    <!-- WRAPPER ENDS -->
-    <!-- ////////////// -->
-
-    <!-- javascript -->
-    <script src="assets/javascript/app.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBBleYeUjhP-WqjPaL6L1jLUrXJuScpqW8&libraries=places&callback=initMap"></script>
-
 </body>
 
-</html>
+</html>ß
