@@ -132,11 +132,30 @@ function initMap() {
         database.ref().on("child_added", function(childSnapshot) { // i tried loading database markers before click function, no luck.
             console.log(childSnapshot);
             // take location from childSnapshot to make a marker on the page
-            console.log(childSnapshot.val().markLat);
-    
+            // console.log(childSnapshot.val().markLat);
+            
+            var contentString = "<div class='clickme'>" + "Hi! There!" + "</div>"; // comment part of the form
+
+            var infowindow = new google.maps.InfoWindow({
+                content: contentString
+            });
+
             var marker = new google.maps.Marker({
                 position: {lat: childSnapshot.val().markLat, lng: childSnapshot.val().markLng},
                 map: map
+            });
+
+            marker.addListener("click", function () { // this only works on recently made marker, has to stay inside click function
+                if (isDisplayModeOn === true) {   
+        
+                    infowindow.open(map, marker); // change to (map, this)
+        
+                } else if (isDisplayModeOn === false) {
+        
+                    $("#side-edit").removeClass("smenu-close").addClass("smenu-open");
+        
+                }
+                
             });
         });
         map.addListener("click", function (e) {
@@ -191,7 +210,7 @@ function initMap() {
         
                 }
             }; */
-            marker.addListener("click", function () { // this only works on recently made marker
+            marker.addListener("click", function () { // this only works on recently made marker, has to stay inside click function
                 if (isDisplayModeOn === true) {   
         
                     infowindow.open(map, marker); // change to (map, this)
