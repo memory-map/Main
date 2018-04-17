@@ -20,7 +20,7 @@ var isDisplayModeOn;
 
 // variable for Google Maps
 var map, infoWindow;
-var loc, marker;
+var loc;
 
 // =============================
 // ========== ACTIONS ==========
@@ -84,6 +84,8 @@ function initMap() {
         ]
     });
 
+
+
     // adding search bar
     var input = document.getElementById("pac-input");
     var autocomplete = new google.maps.places.Autocomplete(input);
@@ -121,64 +123,98 @@ function initMap() {
 
     })
 
+
+    
+
     // adding click event that generates new markers
-    google.maps.event.addListener(map, "click", function (e) {
-
-        // makes so this only runs in edit mode
-        if (isDisplayModeOn === true) {
-
-            return;
-
-        }
-
-        //lat and lng is available in e object
-        loc = e.latLng;
-
-        // make new marker
-        marker = new google.maps.Marker({
-            position: { lat: loc.lat(), lng: loc.lng() },
-            map: map,
-
+    $(document).ready(function (){
+        
+        database.ref().on("child_added", function(childSnapshot) { // i tried loading database markers before click function, no luck.
+            console.log(childSnapshot);
+            // take location from childSnapshot to make a marker on the page
+            console.log(childSnapshot.val().markLat);
+    
+            var marker = new google.maps.Marker({
+                position: {lat: childSnapshot.val().markLat, lng: childSnapshot.val().markLng},
+                map: map
+            });
         });
-
-      /*   var newLatitude = {
-            lat: loc.lat(),
-            lng: loc.lng(),
-        } */
-
-        /* database.ref().push(newLatitude); */
-
-        map.panTo(marker.getPosition());
-        console.log("did it move?");
-
-        console.log(marker);
-        console.log(loc.lat());
-
-        // info window stuff
-        var contentString = "<div class='clickme'>" + "Hi! There!" + "</div>";
-
-        var infowindow = new google.maps.InfoWindow({
-            content: contentString
-        });
-
-        marker.addListener("click", function () {
-
-            if (isDisplayModeOn === true) {   
-
-                infowindow.open(map, marker);
-
-            } else if (isDisplayModeOn === false) {
-
-                $("#side-edit").removeClass("smenu-close").addClass("smenu-open");
-
+        map.addListener("click", function (e) {
+            console.log(this);
+            // makes so this only runs in edit mode
+            if (isDisplayModeOn === true) {
+    
+                return;
+    
             }
-
+    
+            //lat and lng is available in e object
+            loc = e.latLng;
+    
+          /*   var newLatitude = {
+                lat: loc.lat(),
+                lng: loc.lng(),
+            } */
+    
+            /* database.ref().push(newLatitude); */
+    
+    
+            // info window stuff
+            // this needs to change based off what is clicked, the "comment" part of the form
+            var contentString = "<div class='clickme'>" + "Hi! There!" + "</div>"; // comment part of the form
+    
+            var infowindow = new google.maps.InfoWindow({
+                content: contentString
+            });
+    
+            // make new marker
+            var marker = new google.maps.Marker({
+                position: { lat: loc.lat(), lng: loc.lng() },
+                map: map,
+    
+            });
+            
+            map.panTo(marker.getPosition());
+            console.log("did it move?");
+            console.log(marker);
+            console.log(loc.lat());
+            
+            /* if (this === google.maps.Marker) {
+                console.log("***** here be a marker *****");
+                if (isDisplayModeOn === true) {   
+        
+                    infowindow.open(map, this); // change to (map, this)
+        
+                } else if (isDisplayModeOn === false) {
+        
+                    $("#side-edit").removeClass("smenu-close").addClass("smenu-open");
+        
+                }
+            }; */
+            marker.addListener("click", function () { // this only works on recently made marker
+                if (isDisplayModeOn === true) {   
+        
+                    infowindow.open(map, marker); // change to (map, this)
+        
+                } else if (isDisplayModeOn === false) {
+        
+                    $("#side-edit").removeClass("smenu-close").addClass("smenu-open");
+        
+                }
+                
+            });
+        
+            // whatever panel open, close them
+            hideAllInfo();
+            
+    
         });
-
-        // whatever panel open, close them
-        hideAllInfo();
-
+    
+        
+        
     });
+    
+    
 
 };
 
@@ -187,18 +223,6 @@ function initMap() {
 // =====================================================
 
 $(document).ready(function () {
-
-    $(".btn-more").on("click", function() {
-
-    document.getElementById("how-section").scrollIntoView({behavior: "smooth"});
-
-    });
-
-    $("#guide-btn").on("click", function() {
-
-    document.getElementById("how-section").scrollIntoView({behavior: "smooth"});
-
-    });
 
     $(document.body).on("click", ".clickme", function () {
 
@@ -221,6 +245,7 @@ $(document).ready(function () {
         }
 
     });
+
 
     // jessica's code
     $("#edit-button").on("click", function (event) {
