@@ -228,9 +228,15 @@ $(document).ready(function () {
             location: location,
             date: date,
             time: currentTime
+
         };
 
         database.ref().push(newComment);
+
+        $("#comment-input").val("");
+        $("#location-input").val("");
+        $("#date-input").val("");
+
 
     });
 
