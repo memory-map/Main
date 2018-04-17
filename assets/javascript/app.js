@@ -211,22 +211,20 @@ $(document).ready(function () {
 
     // jessica's code
     $("#edit-button").on("click", function (event) {
+        event.preventDefault();
 
         var currentTime = moment(currentTime).format("hh:mm a");
         var content = $("#comment-input").val().trim();
-        var blurb = $("#blurb-input").val().trim();
         var location = $("#location-input").val().trim();
         var date = $("#date-input").val().trim();
 
         console.log("content: ", content);
         console.log("time: ", currentTime);
-        console.log("blurb: ", blurb);
         console.log("location: ", location);
         console.log("date: ", date);
 
         var newComment = {
             content: content,
-            blurb: blurb,
             location: location,
             date: date,
             time: currentTime
