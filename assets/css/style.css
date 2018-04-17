@@ -118,6 +118,7 @@ nav .menu li>a>svg {
 nav .menu li a {
     text-decoration: none;
     color: #d9e4ff;
+    cursor: pointer;
 }
 
 /* main */

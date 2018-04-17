@@ -188,6 +188,18 @@ function initMap() {
 
 $(document).ready(function () {
 
+    $(".btn-more").on("click", function() {
+
+    document.getElementById("how-section").scrollIntoView({behavior: "smooth"});
+
+    });
+
+    $("#guide-btn").on("click", function() {
+
+    document.getElementById("how-section").scrollIntoView({behavior: "smooth"});
+
+    });
+
     $(document.body).on("click", ".clickme", function () {
 
         console.log("Blurb clicked!");
@@ -253,8 +265,4 @@ $(document).ready(function () {
     toggleDisplay();
 
     // document ready closing tag
-
-
-    
-
 });
