@@ -20,6 +20,7 @@ var isDisplayModeOn;
 
 // variable for Google Maps
 var map, infoWindow;
+var loc, marker;
 
 // =============================
 // ========== ACTIONS ==========
@@ -131,27 +132,27 @@ function initMap() {
         }
 
         //lat and lng is available in e object
-        var latLng = e.latLng;
+        loc = e.latLng;
 
         // make new marker
-        var clickMarker = new google.maps.Marker({
-            position: { lat: latLng.lat(), lng: latLng.lng() },
+        marker = new google.maps.Marker({
+            position: { lat: loc.lat(), lng: loc.lng() },
             map: map,
 
         });
 
-        var newLatitude = {
-            lat: latLng.lat(),
-            lng: latLng.lng(),
-        }
+      /*   var newLatitude = {
+            lat: loc.lat(),
+            lng: loc.lng(),
+        } */
 
-        database.ref().push(newLatitude);
+        /* database.ref().push(newLatitude); */
 
-        map.panTo(clickMarker.getPosition());
+        map.panTo(marker.getPosition());
         console.log("did it move?");
 
-        console.log(clickMarker);
-        console.log(latLng.lat());
+        console.log(marker);
+        console.log(loc.lat());
 
         // info window stuff
         var contentString = "<div class='clickme'>" + "Hi! There!" + "</div>";
@@ -160,11 +161,11 @@ function initMap() {
             content: contentString
         });
 
-        clickMarker.addListener("click", function () {
+        marker.addListener("click", function () {
 
             if (isDisplayModeOn === true) {   
 
-                infowindow.open(map, clickMarker);
+                infowindow.open(map, marker);
 
             } else if (isDisplayModeOn === false) {
 
@@ -227,15 +228,17 @@ $(document).ready(function () {
             content: content,
             location: location,
             date: date,
-            time: currentTime
-
+            time: currentTime,
+            markLat: loc.lat(), // cannot be stored as one object, the "loc" object contains functions
+            markLng: loc.lng()
         };
 
         database.ref().push(newComment);
 
-        $("#comment-input").val("");
+        /* $("#comment-input").val("");
         $("#location-input").val("");
-        $("#date-input").val("");
+        $("#date-input").val(""); */
+        $("#side-edit").removeClass("smenu-open").addClass("smenu-close"); // close side edit once you've hit submit!
 
 
     });
@@ -250,4 +253,8 @@ $(document).ready(function () {
     toggleDisplay();
 
     // document ready closing tag
+
+
+    
+
 });
