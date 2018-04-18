@@ -127,116 +127,116 @@ function initMap() {
     
 
     // adding click event that generates new markers
-    $(document).ready(function (){
+    /* $(document).ready(function (){ */
         
-        database.ref().on("child_added", function(childSnapshot) { // i tried loading database markers before click function, no luck.
-            console.log(childSnapshot);
-            // take location from childSnapshot to make a marker on the page
-            // console.log(childSnapshot.val().markLat);
-            
-            var contentString = "<div class='clickme'>" + childSnapshot.val().content+ "</div>"; // comment part of the form
+    database.ref().on("child_added", function(childSnapshot) { // i tried loading database markers before click function, no luck.
+        console.log(childSnapshot);
+        // take location from childSnapshot to make a marker on the page
+        // console.log(childSnapshot.val().markLat);
+        
+        var contentString = "<div class='clickme'>" + childSnapshot.val().content+ "</div>"; // comment part of the form
 
-            var infowindow = new google.maps.InfoWindow({ // leave this alone!
-                content: contentString
-            });
-
-            var marker = new google.maps.Marker({
-                position: {lat: childSnapshot.val().markLat, lng: childSnapshot.val().markLng},
-                map: map,
-                // add more information here?
-                content: childSnapshot.val().content,
-                date: childSnapshot.val().date,
-                location: childSnapshot.val().location
-            });
-
-            marker.addListener("click", function () { // this only works on firebase marker, has to stay inside firebase function
-                loc = marker.position;
-                console.log(loc.lat()+"   "+loc.lng());
-                $(".blurb").text(marker.content); // marker is not global
-                $(".location").text(marker.location);
-                $(".date").text(marker.date);
-                if (isDisplayModeOn === true) {   
-        
-                    infowindow.open(map, marker); // change to (map, this)
-        
-                } else if (isDisplayModeOn === false) {
-        
-                    $("#side-edit").removeClass("smenu-close").addClass("smenu-open");
-        
-                }
-                
-            });
+        var infowindow = new google.maps.InfoWindow({ // leave this alone!
+            content: contentString
         });
-        map.addListener("click", function (e) {
-            console.log(this);
-            // makes so this only runs in edit mode
-            loc = e.latLng;
+
+        var marker = new google.maps.Marker({
+            position: {lat: childSnapshot.val().markLat, lng: childSnapshot.val().markLng},
+            map: map,
+            // add more information here?
+            content: childSnapshot.val().content,
+            date: childSnapshot.val().date,
+            location: childSnapshot.val().location
+        });
+
+        marker.addListener("click", function () { // this only works on firebase marker, has to stay inside firebase function
+            loc = marker.position;
             console.log(loc.lat()+"   "+loc.lng());
-            
-            if (isDisplayModeOn === true) {
-                return;
+            $(".blurb").text(marker.content); // marker is not global
+            $(".location").text(marker.location);
+            $(".date").text(marker.date);
+            if (isDisplayModeOn === true) {   
+    
+                infowindow.open(map, marker); // change to (map, this)
+    
+            } else if (isDisplayModeOn === false) {
+    
+                $("#side-edit").removeClass("smenu-close").addClass("smenu-open");
+    
             }
-    
-            //lat and lng is available in e object
-            loc = e.latLng;
+            
+        });
+    });
+    map.addListener("click", function (e) {
+        console.log(this);
+        // makes so this only runs in edit mode
+        loc = e.latLng;
+        console.log(loc.lat()+"   "+loc.lng());
+        
+        if (isDisplayModeOn === true) {
+            return;
+        }
+
+        //lat and lng is available in e object
+        loc = e.latLng;
+        console.log(loc.lat()+"   "+loc.lng());
+
+        /*   var newLatitude = {
+            lat: loc.lat(),
+            lng: loc.lng(),
+        } */
+
+        /* database.ref().push(newLatitude); */
+
+
+        // info window stuff
+        // this needs to change based off what is clicked, the "comment" part of the form
+        var contentString = "<div class='clickme'>" + "Hi! There!" + "</div>"; // comment part of the form
+
+        var infowindow = new google.maps.InfoWindow({
+            content: contentString
+        });
+
+        // make new marker
+        var marker = new google.maps.Marker({
+            position: { lat: loc.lat(), lng: loc.lng() },
+            map: map,
+            
+        });
+        
+        map.panTo(marker.getPosition());
+        console.log("did it move?");
+        console.log(marker);
+        console.log(loc.lat());
+        
+        
+        marker.addListener("click", function () { // this only works on recently made marker, has to stay inside click function
+            loc = marker.position;
             console.log(loc.lat()+"   "+loc.lng());
+            $(".blurb").text(marker.content); // marker is not global
+            $(".location").text(marker.location);
+            $(".date").text(marker.date);
+            if (isDisplayModeOn === true) {   
     
-          /*   var newLatitude = {
-                lat: loc.lat(),
-                lng: loc.lng(),
-            } */
+                infowindow.open(map, marker); // change to (map, this)
     
-            /* database.ref().push(newLatitude); */
+            } else if (isDisplayModeOn === false) {
     
+                $("#side-edit").removeClass("smenu-close").addClass("smenu-open");
     
-            // info window stuff
-            // this needs to change based off what is clicked, the "comment" part of the form
-            var contentString = "<div class='clickme'>" + "Hi! There!" + "</div>"; // comment part of the form
-    
-            var infowindow = new google.maps.InfoWindow({
-                content: contentString
-            });
-    
-            // make new marker
-            var marker = new google.maps.Marker({
-                position: { lat: loc.lat(), lng: loc.lng() },
-                map: map,
-                
-            });
+            }
             
-            map.panTo(marker.getPosition());
-            console.log("did it move?");
-            console.log(marker);
-            console.log(loc.lat());
-            
-            
-            marker.addListener("click", function () { // this only works on recently made marker, has to stay inside click function
-                loc = marker.position;
-                console.log(loc.lat()+"   "+loc.lng());
-                $(".blurb").text(marker.content); // marker is not global
-                $(".location").text(marker.location);
-                $(".date").text(marker.date);
-                if (isDisplayModeOn === true) {   
-        
-                    infowindow.open(map, marker); // change to (map, this)
-        
-                } else if (isDisplayModeOn === false) {
-        
-                    $("#side-edit").removeClass("smenu-close").addClass("smenu-open");
-        
-                }
-                
-            });
-        
-            // whatever panel open, close them
-            hideAllInfo();
-            
-    
         });
     
+        // whatever panel open, close them
+        hideAllInfo();
         
-        
+
     });
+    
+        
+        
+    /* }); */
     
     
 
