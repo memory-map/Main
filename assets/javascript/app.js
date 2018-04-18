@@ -134,15 +134,16 @@ function initMap() {
             // take location from childSnapshot to make a marker on the page
             // console.log(childSnapshot.val().markLat);
             
-            var contentString = "<div class='clickme'>" + "Hi! There!" + "</div>"; // comment part of the form
+            var contentString = "<div class='clickme'>" + childSnapshot.val().content+ "</div>"; // comment part of the form
 
-            var infowindow = new google.maps.InfoWindow({
+            var infowindow = new google.maps.InfoWindow({ // leave this alone!
                 content: contentString
             });
 
             var marker = new google.maps.Marker({
                 position: {lat: childSnapshot.val().markLat, lng: childSnapshot.val().markLng},
                 map: map
+                // add more information here? 
             });
 
             marker.addListener("click", function () { // this only works on recently made marker, has to stay inside click function
@@ -284,7 +285,7 @@ $(document).ready(function () {
             content: content,
             location: location,
             date: date,
-            time: currentTime,
+            time: currentTime, // picture?
             markLat: loc.lat(), // cannot be stored as one object, the "loc" object contains functions
             markLng: loc.lng()
         };
