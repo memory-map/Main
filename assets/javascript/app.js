@@ -144,6 +144,7 @@ function initMap() {
             position: {lat: childSnapshot.val().markLat, lng: childSnapshot.val().markLng},
             map: map,
             // add more information here?
+            name: childSnapshot.val().name,
             content: childSnapshot.val().content,
             date: childSnapshot.val().date,
             location: childSnapshot.val().location
@@ -152,6 +153,7 @@ function initMap() {
         marker.addListener("click", function () { // this only works on firebase marker, has to stay inside firebase function
             loc = marker.position;
             console.log(loc.lat()+"   "+loc.lng());
+            $(".name").text(marker.name);
             $(".blurb").text(marker.content); // marker is not global
             $(".location").text(marker.location);
             $(".date").text(marker.date);
@@ -213,6 +215,7 @@ function initMap() {
         marker.addListener("click", function () { // this only works on recently made marker, has to stay inside click function
             loc = marker.position;
             console.log(loc.lat()+"   "+loc.lng());
+            $(".name").text(marker.name);
             $(".blurb").text(marker.content); // marker is not global
             $(".location").text(marker.location);
             $(".date").text(marker.date);
@@ -278,16 +281,19 @@ $(document).ready(function () {
         event.preventDefault();
 
         var currentTime = moment(currentTime).format("hh:mm a");
+        var name = $("#name-input").val().trim();
         var content = $("#comment-input").val().trim();
         var location = $("#location-input").val().trim();
         var date = $("#date-input").val().trim();
 
+        console.log("Memory Name:", name);
         console.log("content: ", content);
         console.log("time: ", currentTime);
         console.log("location: ", location);
         console.log("date: ", date);
 
         var newComment = {
+            name: name,
             content: content,
             location: location,
             date: date,
@@ -298,6 +304,7 @@ $(document).ready(function () {
 
         database.ref().push(newComment);
 
+        $("#name-input").val("");
         $("#comment-input").val("");
         $("#location-input").val("");
         $("#date-input").val("");
