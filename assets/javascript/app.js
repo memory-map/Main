@@ -134,7 +134,7 @@ function initMap() {
         // take location from childSnapshot to make a marker on the page
         // console.log(childSnapshot.val().markLat);
         
-        var contentString = "<div class='clickme'>" + childSnapshot.val().content+ "</div>"; // comment part of the form
+        var contentString = "<div class='clickme'>" + childSnapshot.val().content.slice(0,40)+  " ...</div>"; // comment part of the form
 
         var infowindow = new google.maps.InfoWindow({ // leave this alone!
             content: contentString
