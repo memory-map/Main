@@ -146,7 +146,9 @@ function initMap() {
                 // add more information here? 
             });
 
-            marker.addListener("click", function () { // this only works on recently made marker, has to stay inside click function
+            marker.addListener("click", function () { // this only works on firebase marker, has to stay inside firebase function
+                loc = marker.position;
+                console.log(loc.lat()+"   "+loc.lng());
                 if (isDisplayModeOn === true) {   
         
                     infowindow.open(map, marker); // change to (map, this)
@@ -162,6 +164,9 @@ function initMap() {
         map.addListener("click", function (e) {
             console.log(this);
             // makes so this only runs in edit mode
+            loc = e.latLng;
+            console.log(loc.lat()+"   "+loc.lng());
+            
             if (isDisplayModeOn === true) {
     
                 return;
@@ -170,6 +175,7 @@ function initMap() {
     
             //lat and lng is available in e object
             loc = e.latLng;
+            console.log(loc.lat()+"   "+loc.lng());
     
           /*   var newLatitude = {
                 lat: loc.lat(),
@@ -212,6 +218,9 @@ function initMap() {
                 }
             }; */
             marker.addListener("click", function () { // this only works on recently made marker, has to stay inside click function
+                loc = marker.position;
+                console.log(loc.lat()+"   "+loc.lng());
+                
                 if (isDisplayModeOn === true) {   
         
                     infowindow.open(map, marker); // change to (map, this)
