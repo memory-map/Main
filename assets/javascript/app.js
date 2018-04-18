@@ -142,13 +142,19 @@ function initMap() {
 
             var marker = new google.maps.Marker({
                 position: {lat: childSnapshot.val().markLat, lng: childSnapshot.val().markLng},
-                map: map
-                // add more information here? 
+                map: map,
+                // add more information here?
+                content: childSnapshot.val().content,
+                date: childSnapshot.val().date,
+                location: childSnapshot.val().location
             });
 
             marker.addListener("click", function () { // this only works on firebase marker, has to stay inside firebase function
                 loc = marker.position;
                 console.log(loc.lat()+"   "+loc.lng());
+                $(".blurb").text(marker.content); // marker is not global
+                $(".location").text(marker.location);
+                $(".date").text(marker.date);
                 if (isDisplayModeOn === true) {   
         
                     infowindow.open(map, marker); // change to (map, this)
@@ -168,9 +174,7 @@ function initMap() {
             console.log(loc.lat()+"   "+loc.lng());
             
             if (isDisplayModeOn === true) {
-    
                 return;
-    
             }
     
             //lat and lng is available in e object
@@ -197,7 +201,7 @@ function initMap() {
             var marker = new google.maps.Marker({
                 position: { lat: loc.lat(), lng: loc.lng() },
                 map: map,
-    
+                
             });
             
             map.panTo(marker.getPosition());
@@ -205,22 +209,13 @@ function initMap() {
             console.log(marker);
             console.log(loc.lat());
             
-            /* if (this === google.maps.Marker) {
-                console.log("***** here be a marker *****");
-                if (isDisplayModeOn === true) {   
-        
-                    infowindow.open(map, this); // change to (map, this)
-        
-                } else if (isDisplayModeOn === false) {
-        
-                    $("#side-edit").removeClass("smenu-close").addClass("smenu-open");
-        
-                }
-            }; */
+            
             marker.addListener("click", function () { // this only works on recently made marker, has to stay inside click function
                 loc = marker.position;
                 console.log(loc.lat()+"   "+loc.lng());
-                
+                $(".blurb").text(marker.content); // marker is not global
+                $(".location").text(marker.location);
+                $(".date").text(marker.date);
                 if (isDisplayModeOn === true) {   
         
                     infowindow.open(map, marker); // change to (map, this)
@@ -262,7 +257,9 @@ $(document).ready(function () {
             console.log("Display mode has class active!");
 
             // open side info when display mode is active
+            // edit side-panel to display the information form the marker
             $("#side-panel").removeClass("smenu-close").addClass("smenu-open");
+
 
         } else if ($("#edit-mode").hasClass("active")) {
 
@@ -301,9 +298,9 @@ $(document).ready(function () {
 
         database.ref().push(newComment);
 
-        /* $("#comment-input").val("");
+        $("#comment-input").val("");
         $("#location-input").val("");
-        $("#date-input").val(""); */
+        $("#date-input").val("");
         $("#side-edit").removeClass("smenu-open").addClass("smenu-close"); // close side edit once you've hit submit!
 
 
