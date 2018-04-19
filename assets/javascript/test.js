@@ -2,7 +2,7 @@
 // ======= GLOBAL VARIABLES =======
 // ================================
 
-// initializes firebase
+// initializing firebase
 var config = {
     apiKey: "AIzaSyDHwZqvulvp_MbrSBxHDe3jjR1VF1PqCwo",
     authDomain: "memory-map-3b3c8.firebaseapp.com",
@@ -18,12 +18,9 @@ var database = firebase.database();
 // variables for modes
 var isDisplayModeOn;
 
-// variables for Google Maps
-var map, Popup;
+// variable for Google Maps
+var map, infoWindow, Popup;
 var loc;
-
-// variable to keep track of the marker we are editing
-var lastMarkerClicked;
 
 // ================================
 // ======= GLOBAL FUNCTIONS =======
@@ -31,17 +28,16 @@ var lastMarkerClicked;
 
 // init Map function that MUST be declared globally, do not move into doc ready
 function initMap() {
-
-    // initializes popups
+    // popup code initialized
     definePopupClass();
 
     // our default location: berkeley
     var defaultLoc = { lat: 37.8712, lng: -122.2727 };
 
-    // declares map object
+    // declaring map object
     map = new google.maps.Map(document.getElementById("map"), {
         center: defaultLoc,
-        zoom: 13,
+        zoom: 14,
         fullscreenControl: false,
         streetViewControl: false,
         mapTypeControl: false,
@@ -57,7 +53,7 @@ function initMap() {
         ]
     });
 
-    // adds search bar
+    // adding search bar
     var input = document.getElementById("pac-input");
     var autocomplete = new google.maps.places.Autocomplete(input);
     autocomplete.bindTo("bounds", map);
@@ -84,18 +80,20 @@ function initMap() {
 
     });
 
-    // initializes firebase markers
+    // firebase markers initialized
     database.ref().on("child_added", function (childSnapshot) {
 
         console.log(childSnapshot);
 
         if (!childSnapshot.val().content) {
-
             return;
-
         };
 
         var contentString = "<div class='clickme'>" + childSnapshot.val().content.slice(0, 40) + " ...</div>";
+
+        var infowindow = new google.maps.InfoWindow({
+            content: contentString
+        });
 
         var marker = new google.maps.Marker({
             position: { lat: childSnapshot.val().markLat, lng: childSnapshot.val().markLng },
@@ -103,10 +101,10 @@ function initMap() {
             name: childSnapshot.val().name,
             content: childSnapshot.val().content,
             date: childSnapshot.val().date,
-            location: childSnapshot.val().location,
-            key: childSnapshot.key
+            location: childSnapshot.val().location
         });
 
+        // popup that replaces infowindow
         var content = document.createElement("div");
         content.setAttribute("class", "floaty");
         content.innerHTML = contentString;
@@ -115,8 +113,8 @@ function initMap() {
             new google.maps.LatLng(childSnapshot.val().markLat, childSnapshot.val().markLng),
             content);
 
-        popup.marker = marker;
         marker.popup = popup;
+        marker.infowindow = infowindow;
         marker.addListener("click", displayMarkerData);
 
     });
@@ -126,9 +124,7 @@ function initMap() {
 
         // makes so the rest of the function only runs in edit mode
         if (isDisplayModeOn === true) {
-
             return;
-
         }
 
         // lat and lng is available in e object
@@ -138,14 +134,14 @@ function initMap() {
         // info window stuff
         var contentString = "<div class='clickme'>" + "A memory hasn't been added yet!" + "</div>";
 
-        // makes new marker
+        var infowindow = new google.maps.InfoWindow({
+            content: contentString
+        });
+
+        // make new marker
         var marker = new google.maps.Marker({
             position: { lat: loc.lat(), lng: loc.lng() },
             map: map,
-            name: "",
-            content: "",
-            date: "",
-            location: "",
         });
 
         map.panTo(marker.getPosition());
@@ -153,10 +149,8 @@ function initMap() {
         console.log(marker);
         console.log(loc.lat());
 
-        // updates last clicked marker for editing
-        updateLastMarkerClicked(marker);
-
         // new marker data
+        // popup that replaces infowindow
         var content = document.createElement("div");
         content.setAttribute("class", "floaty");
         content.innerHTML = contentString;
@@ -165,11 +159,11 @@ function initMap() {
             new google.maps.LatLng(marker.position.lat, marker.position.lng),
             content);
 
-        popup.marker = marker;
         marker.popup = popup;
+        marker.infowindow = infowindow;
         marker.addListener("click", displayMarkerData);
 
-        // whatever panel is open, this closes it
+        // whatever panel open, close it
         hideAllInfo();
 
     });
@@ -178,7 +172,6 @@ function initMap() {
     // ====== FIREBASE ======
 
     $("#edit-button").on("click", function (event) {
-
         event.preventDefault();
 
         var currentTime = moment(currentTime).format("hh:mm a");
@@ -193,56 +186,23 @@ function initMap() {
         console.log("location: ", location);
         console.log("date: ", date);
 
-        if (name === "" || content === "" || location === "" || date === "") {
+        var newComment = {
+            name: name,
+            content: content,
+            location: location,
+            date: date,
+            time: currentTime, // picture?
+            markLat: loc.lat(), // cannot be stored as one object, the "loc" object contains functions
+            markLng: loc.lng()
+        };
 
-            console.log("Error! Please fill out the whole form!");
+        database.ref().push(newComment);
 
-            $("#name-input").val("");
-            $("#comment-input").val("");
-            $("#location-input").val("");
-            $("#date-input").val("");
-
-            return;
-
-        } else {
-
-            var newComment = {
-                name: name,
-                content: content,
-                location: location,
-                date: date,
-                time: currentTime, // picture?
-                markLat: loc.lat(), // cannot be stored as one object, the "loc" object contains functions
-                markLng: loc.lng()
-            };
-
-            // if it has a key, it is an old marker that we need to update
-            if (lastMarkerClicked.key) {
-
-                console.log(database.ref().child(lastMarkerClicked.key));
-
-                database.ref().child(lastMarkerClicked.key).update(newComment);
-                lastMarkerClicked.name = name;
-                lastMarkerClicked.content = content;
-                lastMarkerClicked.location = location;
-                lastMarkerClicked.date = date;
-
-                lastMarkerClicked.popup.content.innerHTML = content.slice(0, 40) + " ..."; // update popup text
-
-            } else {
-
-                database.ref().push(newComment);
-
-            }
-
-            // clear inputs when submit button hit
-            $("#name-input").val("");
-            $("#comment-input").val("");
-            $("#location-input").val("");
-            $("#date-input").val("");
-            $("#side-edit").removeClass("smenu-open").addClass("smenu-close"); // close side edit once you've hit submit!
-
-        }
+        $("#name-input").val("");
+        $("#comment-input").val("");
+        $("#location-input").val("");
+        $("#date-input").val("");
+        $("#side-edit").removeClass("smenu-open").addClass("smenu-close"); // close side edit once you've hit submit!
 
     });
 
@@ -264,13 +224,12 @@ function initMap() {
 
     });
 
-    // init function closing tag
 };
 
 // =============================
 // ====== OTHER FUNCTIONS ======
 
-// function that displays marker data (whether stored or new)
+// function that displays marker data (whether firebase or live)
 function displayMarkerData() {
 
     var marker = this;
@@ -278,22 +237,17 @@ function displayMarkerData() {
     loc = marker.position;
     console.log(loc.lat() + "   " + loc.lng());
 
-    updateLastMarkerClicked(marker);
+    $(".name").text(marker.name);
+    $(".blurb").text(marker.content);
+    $(".location").text(marker.location);
+    $(".date").text(marker.date);
 
     if (isDisplayModeOn === true) {
 
         console.log(map);
+        marker.popup.setMap(map);
 
-        // lets user hide popups by reclicking markers
-        if (!marker.popup.map) {
-
-            marker.popup.setMap(map);
-
-        } else {
-
-            marker.popup.setMap(null);
-
-        }
+        // marker.infowindow.open(map, marker);
 
     } else if (isDisplayModeOn === false) {
 
@@ -303,34 +257,9 @@ function displayMarkerData() {
 
 };
 
-// function that's called when a marker gets clicked (or its blurb gets clicked)
-function updateLastMarkerClicked(marker) {
-
-    lastMarkerClicked = marker;
-
-    // for info side panel update
-    $(".name").text(marker.name);
-    $(".blurb").text(marker.content);
-    $(".location").text(marker.location);
-    $(".date").text(marker.date);
-
-    // for edit side panel update
-    $("#name-input").val(marker.name);
-    $("#comment-input").val(marker.content);
-    $("#location-input").val(marker.location);
-    $("#date-input").val(marker.date);
-
-    console.log(marker.position, marker.name, marker.content, marker.location, marker.date);
-
-};
-
-// function that opens appropriate panels when blurb gets clicked
-function blurbClicked(popup) {
+function blurbClicked() {
 
     console.log("Blurb clicked!");
-
-    // updates last clicked marker since this opens the sidepanel
-    updateLastMarkerClicked(popup.marker);
 
     if ($("#display-mode").hasClass("active")) {
 
@@ -377,7 +306,7 @@ function toggleEdit() {
 
 };
 
-// hide toggle function
+// hide toggles
 function hideAllInfo() {
 
     console.log("Info hidden!");
@@ -390,9 +319,7 @@ function hideAllInfo() {
 function definePopupClass() {
 
     Popup = function (position, content) {
-
         this.position = position;
-        this.content = content;
 
         content.classList.add('popup-bubble-content');
 
@@ -405,88 +332,73 @@ function definePopupClass() {
         this.anchor.classList.add('popup-tip-anchor');
         this.anchor.appendChild(pixelOffset);
 
+        // Optionally stop clicks, etc., from bubbling up to the map.
         this.stopEventPropagation();
 
+        // Adds a click listener whenever a popup is created
         this.addClickListener();
-
     };
-
+    // NOTE: google.maps.OverlayView is only defined once the Maps API has
+    // loaded. That is why Popup is defined inside initMap().
     Popup.prototype = Object.create(google.maps.OverlayView.prototype);
 
+    /** Called when the popup is added to the map. */
     Popup.prototype.onAdd = function () {
-
         this.getPanes().floatPane.appendChild(this.anchor);
-
     };
 
+    /** Called when the popup is removed from the map. */
     Popup.prototype.onRemove = function () {
-
         if (this.anchor.parentElement) {
-
             this.anchor.parentElement.removeChild(this.anchor);
-
         }
-
     };
 
+    /** Called when the popup needs to draw itself. */
     Popup.prototype.draw = function () {
-
         var divPosition = this.getProjection().fromLatLngToDivPixel(this.position);
-
+        // Hide the popup when it is far out of view.
         var display =
             Math.abs(divPosition.x) < 4000 && Math.abs(divPosition.y) < 4000 ?
                 'block' :
                 'none';
 
         if (display === 'block') {
-
             this.anchor.style.left = divPosition.x + 'px';
             this.anchor.style.top = divPosition.y + 'px';
-
         }
-
         if (this.anchor.style.display !== display) {
-
             this.anchor.style.display = display;
-
         }
-
     };
 
+    /** Stops clicks/drags from bubbling up to the map. */
     Popup.prototype.stopEventPropagation = function () {
-
         var anchor = this.anchor;
         anchor.style.cursor = 'auto';
 
         ['click', 'dblclick', 'contextmenu', 'wheel', 'mousedown', 'touchstart',
             'pointerdown']
             .forEach(function (event) {
-
                 anchor.addEventListener(event, function (e) {
-
                     e.stopPropagation();
-
                 });
-
             });
-
     };
 
-    // function that listens for clicks on popups
+    // This will add a function that will listen for clicks on the popups
     Popup.prototype.addClickListener = function () {
-
         var anchor = this.anchor;
         var popup = this;
         anchor.style.cursor = 'auto';
 
         anchor.addEventListener('click', function (e) {
+            // Edit this function to do stuff on click 
+            blurbClicked();
 
-            blurbClicked(popup);
-
+            // Just make sure that the click doesn't go through to the map
             e.stopPropagation();
-
         });
-
     };
 
 };
@@ -497,25 +409,7 @@ function definePopupClass() {
 
 $(document).ready(function () {
 
-    // allows header button to scroll to instructions
-    $(".btn-more").on("click", function () {
-
-        // display
-        console.log("I've been clicked!");
-        document.getElementById("how-section").scrollIntoView({ behavior: "smooth" });
-
-    });
-
-    // allows header link to scroll to instructions
-    $("#howtouse").on("click", function () {
-
-        // display
-        console.log("I've been clicked!");
-        document.getElementById("how-section").scrollIntoView({ behavior: "smooth" });
-
-    });
-
-    // initializes display mode
+    // initialize toggle
     toggleDisplay();
 
     // document ready closing tag
