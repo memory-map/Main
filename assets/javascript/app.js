@@ -51,7 +51,7 @@ function toggleEdit() {
 
 }
 
-function hideAllInfo () {
+function hideAllInfo() {
 
     console.log("Info hidden!");
     $("#side-panel").removeClass("smenu-open").addClass("smenu-close");
@@ -83,8 +83,6 @@ function initMap() {
             }
         ]
     });
-
-
 
     // adding search bar
     var input = document.getElementById("pac-input");
@@ -123,25 +121,20 @@ function initMap() {
 
     })
 
-
-    
-
     // adding click event that generates new markers
-    /* $(document).ready(function (){ */
-        
-    database.ref().on("child_added", function(childSnapshot) { // i tried loading database markers before click function, no luck.
+
+    database.ref().on("child_added", function (childSnapshot) { // i tried loading database markers before click function, no luck.
         console.log(childSnapshot);
         // take location from childSnapshot to make a marker on the page
-        // console.log(childSnapshot.val().markLat);
-        
-        var contentString = "<div class='clickme'>" + childSnapshot.val().content.slice(0,40)+  " ...</div>"; // comment part of the form
+
+        var contentString = "<div class='clickme'>" + childSnapshot.val().content.slice(0, 40) + " ...</div>"; // comment part of the form
 
         var infowindow = new google.maps.InfoWindow({ // leave this alone!
             content: contentString
         });
 
         var marker = new google.maps.Marker({
-            position: {lat: childSnapshot.val().markLat, lng: childSnapshot.val().markLng},
+            position: { lat: childSnapshot.val().markLat, lng: childSnapshot.val().markLng },
             map: map,
             // add more information here?
             name: childSnapshot.val().name,
@@ -152,44 +145,38 @@ function initMap() {
 
         marker.addListener("click", function () { // this only works on firebase marker, has to stay inside firebase function
             loc = marker.position;
-            console.log(loc.lat()+"   "+loc.lng());
+            console.log(loc.lat() + "   " + loc.lng());
             $(".name").text(marker.name);
             $(".blurb").text(marker.content); // marker is not global
             $(".location").text(marker.location);
             $(".date").text(marker.date);
-            if (isDisplayModeOn === true) {   
-    
+            if (isDisplayModeOn === true) {
+
                 infowindow.open(map, marker); // change to (map, this)
-    
+
             } else if (isDisplayModeOn === false) {
-    
+
                 $("#side-edit").removeClass("smenu-close").addClass("smenu-open");
-    
+
             }
-            
+
         });
     });
+
     map.addListener("click", function (e) {
+
         console.log(this);
-        // makes so this only runs in edit mode
         loc = e.latLng;
-        console.log(loc.lat()+"   "+loc.lng());
-        
+        console.log(loc.lat() + "   " + loc.lng());
+
+        // makes so this only runs in edit mode
         if (isDisplayModeOn === true) {
             return;
         }
 
         //lat and lng is available in e object
         loc = e.latLng;
-        console.log(loc.lat()+"   "+loc.lng());
-
-        /*   var newLatitude = {
-            lat: loc.lat(),
-            lng: loc.lng(),
-        } */
-
-        /* database.ref().push(newLatitude); */
-
+        console.log(loc.lat() + "   " + loc.lng());
 
         // info window stuff
         // this needs to change based off what is clicked, the "comment" part of the form
@@ -203,45 +190,37 @@ function initMap() {
         var marker = new google.maps.Marker({
             position: { lat: loc.lat(), lng: loc.lng() },
             map: map,
-            
+
         });
-        
+
         map.panTo(marker.getPosition());
         console.log("did it move?");
         console.log(marker);
         console.log(loc.lat());
-        
-        
+
         marker.addListener("click", function () { // this only works on recently made marker, has to stay inside click function
             loc = marker.position;
-            console.log(loc.lat()+"   "+loc.lng());
+            console.log(loc.lat() + "   " + loc.lng());
             $(".name").text(marker.name);
             $(".blurb").text(marker.content); // marker is not global
             $(".location").text(marker.location);
             $(".date").text(marker.date);
-            if (isDisplayModeOn === true) {   
-    
+            if (isDisplayModeOn === true) {
+
                 infowindow.open(map, marker); // change to (map, this)
-    
+
             } else if (isDisplayModeOn === false) {
-    
+
                 $("#side-edit").removeClass("smenu-close").addClass("smenu-open");
-    
+
             }
-            
+
         });
-    
+
         // whatever panel open, close them
         hideAllInfo();
-        
 
     });
-    
-        
-        
-    /* }); */
-    
-    
 
 };
 
@@ -274,7 +253,6 @@ $(document).ready(function () {
         }
 
     });
-
 
     // jessica's code
     $("#edit-button").on("click", function (event) {
@@ -309,7 +287,6 @@ $(document).ready(function () {
         $("#location-input").val("");
         $("#date-input").val("");
         $("#side-edit").removeClass("smenu-open").addClass("smenu-close"); // close side edit once you've hit submit!
-
 
     });
 
