@@ -6,7 +6,7 @@ Instructions: There are two modes to this application, Display Mode (represented
 
 Display Mode: Click a marker to preview a memory. Click the preview to open up the memory info panel. Click the marker again to hide the preview.
 
-Edit Mode: Click a marker to open up the memory edit panel. Fill out the memory form and hit submit. Click the marker in Display Mode to view the memory.
+Edit Mode: Click anywhere on the map to create a marker. Click the marker to open up the memory edit panel. Fill out the memory form completely and hit submit. Click the marker in Display Mode to view the memory.
 
 GitHub Pages Link: [Memory-Map](https://memory-map.github.io/Main/)
 
