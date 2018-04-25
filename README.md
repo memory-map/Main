@@ -11,3 +11,5 @@ Edit Mode: Click anywhere on the map to create a marker. Click the marker to ope
 GitHub Pages Link: [Memory-Map](https://memory-map.github.io/Main/)
 
 Link to Google Slides: [Google Slides](https://docs.google.com/presentation/d/1B2i_RZkZwiOaBuKQS-gurIIk8xswqZCLEqwdR7bBtGo/edit#slide=id.p)
+
+Link to site: [Memory Map](https://memory-map.github.io/Main/)
